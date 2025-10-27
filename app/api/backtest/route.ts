@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import yahooFinance from "yahoo-finance2";
 import { CompositeChannelIndicator, type OHLCVData } from "@/lib/indicators";
+import {
+  fetchYahooFinanceData,
+  getPeriodStartDate,
+} from "@/lib/yahooFinance";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,12 +18,12 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Veriyi indir
-    const queryOptions = {
-      period1: getPeriodStartDate(period || "1y"),
-      interval: (interval || "1d") as any,
-    };
-
-    const result = await yahooFinance.historical(symbol, queryOptions);
+    const period1 = getPeriodStartDate(period || "1y");
+    const result = await fetchYahooFinanceData(
+      symbol,
+      period1,
+      interval || "1d"
+    );
 
     if (!result || result.length === 0) {
       return NextResponse.json(
@@ -30,13 +33,13 @@ export async function POST(request: NextRequest) {
     }
 
     // OHLCV formatına çevir
-    const data: OHLCVData[] = result.map((item: any) => ({
+    const data: OHLCVData[] = result.map((item) => ({
       time: item.date.toISOString(),
       open: item.open,
       high: item.high,
       low: item.low,
       close: item.close,
-      volume: item.volume || 0,
+      volume: item.volume,
     }));
 
     // İndikatörü oluştur
@@ -211,19 +214,5 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-function getPeriodStartDate(period: string): Date {
-  const now = new Date();
-  const periodMap: Record<string, number> = {
-    "1mo": 30,
-    "3mo": 90,
-    "6mo": 180,
-    "1y": 365,
-    "2y": 730,
-  };
-
-  const days = periodMap[period] || 365;
-  return new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
 }
 
