@@ -20,7 +20,7 @@
     "axios": "^1.7.9",
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.5.5",
-    "yahooFinance2": "^2.14.2"
+    "yahoo-finance2": "^2.14.2"
   },
   "devDependencies": {
     "@types/node": "^22",

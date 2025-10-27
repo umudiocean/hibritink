@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import yahooFinance from "yahooFinance2";
+import yahooFinance from "yahoo-finance2";
 import { CompositeChannelIndicator, type OHLCVData } from "@/lib/indicators";
 
 export async function POST(request: NextRequest) {
