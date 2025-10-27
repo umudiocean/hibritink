@@ -122,19 +122,17 @@ export default function Home() {
     }
   }, [symbol, period, interval, weights]);
   
-  // İlk yükleme
+  // İlk yükleme ve otomatik 15 dakika güncelleme
   useEffect(() => {
     fetchAnalysis();
-  }, []);
-  
-  // Otomatik 15 dakika güncelleme
-  useEffect(() => {
+    
     const intervalId = setInterval(() => {
       fetchAnalysis();
-    }, 15 * 60 * 1000) as NodeJS.Timeout; // 15 dakika
+    }, 15 * 60 * 1000); // 15 dakika
     
     return () => clearInterval(intervalId);
-  }, [fetchAnalysis]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   // Strategi değiştiğinde ağırlıkları güncelle
   useEffect(() => {
