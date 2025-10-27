@@ -126,7 +126,8 @@ export default function Home() {
   useEffect(() => {
     fetchAnalysis();
     
-    const intervalId = setInterval(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const intervalId: any = setInterval(() => {
       fetchAnalysis();
     }, 15 * 60 * 1000); // 15 dakika
     
